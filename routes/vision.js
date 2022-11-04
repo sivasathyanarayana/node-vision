@@ -31,15 +31,32 @@ router.post('/classify', async function (req, res, next) {
       // Your code starts here //
       client.detectLabels(params, function (err, response) {
         if (err) {
-          console.log(err, err.stack); // if an error occurred
+          console.log(err, 'rresjn')
+          
+          /*res.json({
+            //"labels": ['Exception is '+err.code, 'Err Code is ' +err.statusCode]
+            error : {
+              message : err.code
+            }
+          })*/
+          res.status(err.statusCode).json({'error' : 'Error Occured : Error Code '+ err.statusCode+', '+err.code})
+          
         } else {
+          
           response.Labels.forEach(label => {
-            res1.push(label.Name);
-
+            console.log(label,'label')
+            if(label.Confidence>90){
+              res1.push(label.Name+'*');
+            } else  {
+              res1.push(label.Name);
+            } 
           })
-          res.json({
-            "labels": res1
-          });
+          
+            res.json({
+              "labels": res1
+            });
+
+          
         }
       });
     }
